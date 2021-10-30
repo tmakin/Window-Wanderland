@@ -33,35 +33,38 @@ class Flock {
 
 class Boid {
 
-  float defaultMaxSpeed = 3.0;
-
   PVector roostPosition = null;
   PVector position;
   PVector velocity;
   PVector acceleration;
-  float r = 2.0;
+  float r = 3.0;
   float maxforce = 0.03;
-  float maxspeed = defaultMaxSpeed;
+  float maxspeed = 3.0;
   float roostSpeed = 1;
   Rect roostRect = null;
   float desiredseparation = 25.0f;
   float roostSeparation = 5.0f;
   boolean insideRoost = false;
   Rect rect;
+  float interactionDist;
+  
+  float cohesionFactor = 1.1;
+  float separationFactor = 1.5;
 
   float _distance = 0;
 
-  Boid(Rect rect_, PVector position) {
+  Boid(Rect rect_, PVector position, float separation) {
     this.rect = rect_;
     this.velocity = PVector.random2D();
     this.position = position;
     this.acceleration = new PVector(0, 0);
+    this.desiredseparation = separation;
+    this.interactionDist=2*separation;
   }
 
   void setRoostPosition(PVector value) {
     roostPosition = value;
     insideRoost = false;
-    maxspeed = defaultMaxSpeed;
   }
 
   void setRoostRect(Rect rect) {
@@ -69,12 +72,10 @@ class Boid {
     roostPosition = rect.getRandomPoint();
     roostPosition = rect.center;
   }
-
-
+  
   void clearRoostPosition() {
     roostRect = null;
     roostPosition = null;
-    maxspeed = defaultMaxSpeed;
     insideRoost = false;
   }
 
@@ -98,8 +99,8 @@ class Boid {
     PVector ali = align(boids);      // Alignment
 
     // Arbitrarily weight these forces
-    sep.mult(1.5);
-    ali.mult(1.0);
+    sep.mult(separationFactor);
+    ali.mult(0.8);
     // Add the force vectors to acceleration
 
     applyForce(ali);
@@ -115,6 +116,7 @@ class Boid {
       }
     } else {
       PVector coh = cohesion(boids);   // Cohesion
+      coh.mult(cohesionFactor);
       applyForce(coh);
     }
   }
@@ -160,7 +162,7 @@ class Boid {
     // Draw a triangle rotated in the direction of velocity
     float theta = velocity.heading() + radians(90);
 
-    fill(0, 100);
+    fill(0);
     stroke(0);
     strokeWeight(1); 
     pushMatrix();
@@ -233,12 +235,11 @@ class Boid {
   // Alignment
   // For every nearby boid in the system, calculate the average velocity
   PVector align (ArrayList<Boid> boids) {
-    float neighbordist = 50;
     PVector sum = new PVector(0, 0);
     int count = 0;
     for (Boid other : boids) {
       float d = other._distance;
-      if ((d > 0) && (d < neighbordist)) {
+      if ((d > 0) && (d < interactionDist)) {
         sum.add(other.velocity);
         count++;
       }
@@ -263,12 +264,11 @@ class Boid {
   // Cohesion
   // For the average position (i.e. center) of all nearby boids, calculate steering vector towards that position
   PVector cohesion (ArrayList<Boid> boids) {
-    float neighbordist = 50;
     PVector sum = new PVector(0, 0);   // Start with empty vector to accumulate all positions
     int count = 0;
     for (Boid other : boids) {
       float d = other._distance;
-      if ((d > 0) && (d < neighbordist)) {
+      if ((d > 1) && (d < interactionDist)) {
         sum.add(other.position); // Add position
         count++;
       }
