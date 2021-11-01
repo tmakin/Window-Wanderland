@@ -123,7 +123,8 @@ class MurmurationShow extends Show {
     if (hour == roostHour && !roostEnabled) {
       int roostIndex = window.getRandomIndex();
       Rect rect = window.boxes[roostIndex].box;
-
+      northStar = rect.getRandomPoint();
+          
       for (Boid bird : flock.boids) {
         bird.setRoostRect(rect);
         //bird.cohesionFactor = cohesionFactor;
@@ -197,7 +198,7 @@ class MurmurationShow extends Show {
     int roostIndex = window.getRandomIndex();
     Rect rect = window.boxes[roostIndex].box;
 
-    PVector c = rect.center;
+    //PVector c = rect.center;
     //float separation = rect.Width*0.2*random(0.9, 1.1);
     float separation = 25;
     println("separation", separation);

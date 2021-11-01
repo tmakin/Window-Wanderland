@@ -134,8 +134,6 @@ class ShowBox {
   public void animate(Rect targetRect, float zMax) {
     this.targetRect = targetRect.clone();
     PVector d = PVector.sub(targetRect.origin, box.origin); 
-    float dist = d.mag();
-    //int numSteps = (int)Math.floor(dist/speed);
     int numSteps = 30;
 
     animationPath = new PVector[numSteps];

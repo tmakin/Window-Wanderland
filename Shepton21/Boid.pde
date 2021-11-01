@@ -37,7 +37,7 @@ class Boid {
   PVector position;
   PVector velocity;
   PVector acceleration;
-  float r = 3.0;
+  float r = 5.0;
   float maxforce = 0.03;
   float maxspeed = 3.0;
   float roostSpeed = 1;
@@ -47,7 +47,7 @@ class Boid {
   boolean insideRoost = false;
   Rect rect;
   float interactionDist;
-  
+
   float cohesionFactor = 1.1;
   float separationFactor = 1.5;
 
@@ -72,7 +72,7 @@ class Boid {
     roostPosition = rect.getRandomPoint();
     roostPosition = rect.center;
   }
-  
+
   void clearRoostPosition() {
     roostRect = null;
     roostPosition = null;
@@ -158,20 +158,55 @@ class Boid {
     return steer;
   }
 
+  int flapCycle = 10;
+  int flap = (int)random(0, flapCycle);
+  
+  int flapRate = 2;
+  int flapInc = flapRate;
+  int glide = 0;
+  int flapMax = 9;
+
+
   void draw() {
+    if (glide == 0) {
+      flap+=flapInc;
+      if (flap >= flapMax) {
+        flapInc = -flapRate;
+        glide = random(1) < 0.1 ? int(random(10, 20)) : 0;
+      } else if(flap <= 0) {
+        flap = 0;
+        flapInc = flapRate; 
+      }
+    } else {
+      glide--;
+    }
+
+
+
+
+    float f = insideRoost ? 0.5*r : 1.5*r*(0.1+flap/(float)flapCycle);
+
+
     // Draw a triangle rotated in the direction of velocity
     float theta = velocity.heading() + radians(90);
 
     fill(0);
     stroke(0);
-    strokeWeight(1); 
+    strokeWeight(2); 
     pushMatrix();
     translate(position.x, position.y);
     rotate(theta);
     beginShape(TRIANGLES);
-    vertex(0, -r*2);
-    vertex(-r, r*2);
-    vertex(r, r*2);
+    float b = 1.5*r;
+    vertex(0, -0.6*r);
+    vertex(-0.2*r, b);
+    vertex(0.2*r, b);
+
+
+    vertex(-f, 0.5*r);
+    vertex(0, -0.2*r);
+    vertex(f, 0.5*r);
+
     endShape();
     popMatrix();
   }
