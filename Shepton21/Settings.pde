@@ -24,6 +24,8 @@ class Settings {
   int n;
   int w;
   int h;
+  
+  boolean windowFrame=false;
 
   ArrayList<ShowSettings> showList = new ArrayList<ShowSettings>();
 
@@ -57,6 +59,8 @@ class Settings {
 
     json.setFloat("rotX", rotX);
     json.setFloat("rotY", rotY);
+    
+    json.setBoolean("windowFrame", windowFrame);
 
     JSONArray showListJson = new JSONArray();
     for (int i = 0; i < showList.size(); i++) {
@@ -97,6 +101,8 @@ class Settings {
 
     rotX = json.getFloat("rotX", rotX);
     rotY = json.getFloat("rotY", rotY);
+
+    windowFrame = json.getBoolean("windowFrame", windowFrame);
 
     margin = json.getInt("margin", margin);
     aspectRatio = json.getFloat("aspectRatio", aspectRatio);

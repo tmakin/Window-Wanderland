@@ -44,7 +44,7 @@ class ShowManager {
   private int cY;
   private Settings settings;
   private Window window;
-  
+
   private Show currentShow;
   private int showSettingsIndex = -1;
   //private int showSettingsIndex = 2;
@@ -64,7 +64,7 @@ class ShowManager {
     showList[2] = new MurmurationShow(settings);
     showList[3] = new PictureShow(settings);
     showList[4] = new AnagramShow(settings);
-    
+
 
     nextShow();
   }
@@ -73,11 +73,11 @@ class ShowManager {
   {
     if (key == 's') {
       settings.save();
-    }
-    else if(key == 'n') {
-        nextShow(); 
-      }
-    else if (key == CODED) {
+    } else if (key == 'n') {
+      nextShow();
+    } else if (key == 'w') {
+      settings.windowFrame = !settings.windowFrame;
+    } else if (key == CODED) {
       switch(keyCode) {
       case RIGHT:
         settings.rotY+=rotInc;
@@ -98,7 +98,7 @@ class ShowManager {
       }
     }
   }
-  
+
 
   void draw() {
 
@@ -118,20 +118,24 @@ class ShowManager {
     rotateX(settings.rotX);
 
     currentShow.draw();
-    window.drawFrame();
+    
+    if(settings.windowFrame) {
+      window.drawFrame();
+    }
+    
 
     popMatrix();
   }
-  
+
   void nextShow() {
     showSettingsIndex++;
-    
-    if(showSettingsIndex >= settings.showList.size()) {
-       showSettingsIndex = 0;
+
+    if (showSettingsIndex >= settings.showList.size()) {
+      showSettingsIndex = 0;
     }
-    
+
     currentShowSettings = settings.showList.get(showSettingsIndex);
-    setShow(currentShowSettings.index); 
+    setShow(currentShowSettings.index);
   }
 
   void setShow(int index) {
