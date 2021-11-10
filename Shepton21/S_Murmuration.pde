@@ -1,6 +1,8 @@
 class MurmurationShow extends Show {
 
-  int hour = 5;
+   final int startHour = 5;
+   
+  int hour = startHour;
   float mins = 0;
   int time = 0;
   int nBirds = 100;
@@ -12,6 +14,7 @@ class MurmurationShow extends Show {
   int roostHour = 20;
   int sunsetMargin = 3;
   final float maxCohesion = 3.0;
+  int hoursSinceStart = 0;
 
   color azureBlue = color(200, 50, 99);
   color nightBlue = color(250, 80, 30);
@@ -107,6 +110,10 @@ class MurmurationShow extends Show {
     if (mins >= 60) {
       hour++;
       mins = 0;
+      
+      if(hour == startHour) {
+        nextLoop(); 
+      }
     }
     if (hour >= 24 ) {
       hour = 0;
@@ -187,19 +194,15 @@ class MurmurationShow extends Show {
     flock.draw();
   }
 
-  void stop() {
-  }
-
   void start() {
 
+   if(flock == null) {
     flock = new Flock();
     Rect windowRect = window.getRect();
 
     int roostIndex = window.getRandomIndex();
     Rect rect = window.boxes[roostIndex].box;
 
-    //PVector c = rect.center;
-    //float separation = rect.Width*0.2*random(0.9, 1.1);
     float separation = 25;
     println("separation", separation);
     for (int k=0; k < nBirds; k++) {
@@ -207,6 +210,9 @@ class MurmurationShow extends Show {
       b.maxspeed*=random(0.8, 1.2);
       flock.addBoid(b);
     }
+   }
+   
+   hour = startHour;
   }
 }
 

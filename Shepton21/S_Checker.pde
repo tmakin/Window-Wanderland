@@ -1,5 +1,7 @@
 class CheckerBoardShow extends Show {
-
+  final int ticksPerLoop = 1000;
+  int loopTicks = 0;
+  
   int ticks = 0;
   final int cycleTicks = 500;
 
@@ -27,6 +29,13 @@ class CheckerBoardShow extends Show {
   }
 
   void update() {
+    loopTicks++;
+    if(loopTicks > ticksPerLoop) {
+      nextLoop(); 
+      loopTicks=0;
+    }
+    
+    
     ticks++;
     if (ticks >=cycleTicks) {
       nextColor();
@@ -52,8 +61,7 @@ class CheckerBoardShow extends Show {
   void draw() {
     window.draw();
   }
-  void stop() {
-  }
+
   void start() {
   }
 }

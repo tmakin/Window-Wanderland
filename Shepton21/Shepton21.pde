@@ -38,12 +38,17 @@ void draw() {
 class ShowManager {
   private final float rotInc = 0.01;
 
-  private Show currentShow;
+
   private final Show[] showList;
   private int cX;
   private int cY;
   private Settings settings;
   private Window window;
+  
+  private Show currentShow;
+  private int showSettingsIndex = -1;
+  //private int showSettingsIndex = 2;
+  private ShowSettings currentShowSettings = null;
 
   ShowManager() {
     settings = new Settings();
@@ -54,13 +59,14 @@ class ShowManager {
 
     showList = new Show[5];
 
-    showList[0]= new CheckerBoardShow(settings);
-    showList[1] = new AnagramShow(settings);
-    showList[2] = new PictureShow(settings);
-    showList[3] = new MurmurationShow(settings);
-    showList[4] = new AppleShow(settings);
+    showList[0] = new CheckerBoardShow(settings);
+    showList[1] = new AppleShow(settings);
+    showList[2] = new MurmurationShow(settings);
+    showList[3] = new PictureShow(settings);
+    showList[4] = new AnagramShow(settings);
+    
 
-    setShow(settings.showIndex);
+    nextShow();
   }
 
   void keyPressed()
@@ -68,7 +74,10 @@ class ShowManager {
     if (key == 's') {
       settings.save();
     }
-    if (key == CODED) {
+    else if(key == 'n') {
+        nextShow(); 
+      }
+    else if (key == CODED) {
       switch(keyCode) {
       case RIGHT:
         settings.rotY+=rotInc;
@@ -89,14 +98,19 @@ class ShowManager {
       }
     }
   }
+  
 
   void draw() {
+
+    if (currentShowSettings != null && currentShow.loopCount >= currentShowSettings.duration) {
+      println("Next show");
+      nextShow();
+    }
+
     currentShow.update();
 
     background(0);
-    //lights();
-        //clip(0,0, 400,400);
-        
+
     noStroke();
     pushMatrix();
     translate(cX, cY, 0);
@@ -108,21 +122,27 @@ class ShowManager {
 
     popMatrix();
   }
+  
+  void nextShow() {
+    showSettingsIndex++;
+    
+    if(showSettingsIndex >= settings.showList.size()) {
+       showSettingsIndex = 0;
+    }
+    
+    currentShowSettings = settings.showList.get(showSettingsIndex);
+    setShow(currentShowSettings.index); 
+  }
 
   void setShow(int index) {
     if (index < 0 || index >= showList.length) {
-      println("Invalis show", index);
+      println("Invalid show", index);
       index = 0;
     } 
-    
-    settings.showIndex = index;
-
-    if (currentShow != null) {
-      currentShow.stop();
-    }
 
     currentShow = showList[index];
     currentShow.start();
+    currentShow.resetLoops();
     println("SetShow", index);
   }
 }

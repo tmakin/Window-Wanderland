@@ -37,7 +37,8 @@ class AnagramShow extends Show {
     staticWindow = new Window(settings);
 
     String refWord = words[0];
-    n = refWord.length();
+    n = Math.min(refWord.length(), settings.n);
+    
     charBoxes = new CharBox[n];
     for (int k = 0; k < n; k++) {
       ShowBox box = window.boxes[k];
@@ -59,6 +60,7 @@ class AnagramShow extends Show {
     wordIndex++;
     if (wordIndex >= words.length) {
       wordIndex = 0;
+      nextLoop();
     }
 
     nextWord = words[wordIndex];

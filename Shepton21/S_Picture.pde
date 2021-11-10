@@ -1,4 +1,4 @@
-String[] imageFiles = {"apple.png", "tree.jpg", "mountains.jpg", };
+String[] imageFiles = {"prison.jpg", "babycham.jpg", "apple.png", };
 
 class PictureShow extends Show {
 
@@ -60,6 +60,7 @@ class PictureShow extends Show {
     imageIndex++;
     if (imageIndex >= n) {
       imageIndex = 0;
+      nextLoop(); 
     }
   }
 
@@ -102,8 +103,7 @@ class PictureShow extends Show {
     window.draw();
     window.drawFrame();
   }
-  void stop() {
-  }
+
   void start() {
     if (!loaded) {
       loadImages();
@@ -120,7 +120,5 @@ class PictureShow extends Show {
     numHidden = 0;
     hide = true;
     ticks = 0;
-
-    println("Pictureshow started");
   }
 }

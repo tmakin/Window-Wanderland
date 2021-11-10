@@ -39,7 +39,7 @@ class Boid {
   PVector acceleration;
   float r = 5.0;
   float maxforce = 0.03;
-  float maxspeed = 3.0;
+  float maxspeed = 4.0;
   float roostSpeed = 1;
   Rect roostRect = null;
   float desiredseparation = 25.0f;

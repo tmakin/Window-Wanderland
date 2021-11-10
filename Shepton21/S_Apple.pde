@@ -10,6 +10,8 @@ class AppleShow extends Show {
   final float gravity = -20;
   final float minDia = 30;
   final float maxDia = 65;
+  final int ticksPerLoop = 1000;
+  int loopTicks = 0;
 
   Rect rect;
   int type;
@@ -89,7 +91,13 @@ class AppleShow extends Show {
 
 
   void update() {
-
+    
+    loopTicks++;
+    if(loopTicks > ticksPerLoop) {
+      nextLoop(); 
+      loopTicks=0;
+    }
+    
     ticks++;
     if (ticks > 10) {
       removeDeadApples();
@@ -115,7 +123,5 @@ class AppleShow extends Show {
 
   void start() {
     box2d.setGravity(0, gravity);
-  }
-  void stop() {
   }
 }
