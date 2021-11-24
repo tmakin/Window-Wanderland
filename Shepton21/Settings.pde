@@ -15,8 +15,8 @@ class Settings {
   int nX = 3;
   int nY = 4;
 
-  int margin=10;
-  float aspectRatio = 1.35;
+  int margin=0;
+  float aspectRatio = 1.9;
 
   float rotX=0;
   float rotY=0;
@@ -26,18 +26,18 @@ class Settings {
   int h;
   
   boolean windowFrame=false;
+  boolean flip=true;
 
   ArrayList<ShowSettings> showList = new ArrayList<ShowSettings>();
 
   Settings() {
 
     showList.add(new ShowSettings(2, 2)); 
-    showList.add(new ShowSettings(3, 2)); 
-
+    showList.add(new ShowSettings(3, 1)); 
     showList.add(new ShowSettings(1, 2)); 
     showList.add(new ShowSettings(0, 2)); 
 
-    load();
+    tryLoad();
     postProcess();
 
     JSONObject json = serializeJSON();
@@ -46,8 +46,12 @@ class Settings {
 
   private void postProcess() {
     n = nX*nY;
-    h = int((height-2*margin)/nY);
-    w = int(h/aspectRatio);
+    
+    float windowHeight = height-2*margin;
+    float windowWidth = windowHeight/aspectRatio;
+    h = int(windowHeight/nY);
+    w = int(windowWidth/nX);
+    //println("aspect", (float)h/(float)w);
   }
 
   JSONObject serializeJSON() {
@@ -61,7 +65,8 @@ class Settings {
     json.setFloat("rotY", rotY);
     
     json.setBoolean("windowFrame", windowFrame);
-
+    json.setBoolean("flip", flip);
+    
     JSONArray showListJson = new JSONArray();
     for (int i = 0; i < showList.size(); i++) {
 
@@ -84,13 +89,16 @@ class Settings {
     println("Settings saved", fileName);
   }
 
+  void tryLoad() {
+     try {
+       load();
+     }
+     catch(Exception e) {
+           println("Failed to load settings", e);
+     }
+  }
+  
   void load() {
-    File f = dataFile(fileName);
-    if (!f.isFile()) {
-      println("Settings file not found", fileName);
-      return;
-    }
-
     JSONObject json = loadJSONObject(fileName);
 
     nX = json.getInt("nX", nX);
@@ -103,7 +111,8 @@ class Settings {
     rotY = json.getFloat("rotY", rotY);
 
     windowFrame = json.getBoolean("windowFrame", windowFrame);
-
+    flip = json.getBoolean("flip", flip);
+    
     margin = json.getInt("margin", margin);
     aspectRatio = json.getFloat("aspectRatio", aspectRatio);
 

@@ -19,7 +19,6 @@ void setup() {
   background(0);
   setColorMode();
 
-
   // setup box2d
   box2d.createWorld();
 
@@ -77,6 +76,8 @@ class ShowManager {
       nextShow();
     } else if (key == 'w') {
       settings.windowFrame = !settings.windowFrame;
+    } else if (key == 'f') {
+      settings.flip = !settings.flip;
     } else if (key == CODED) {
       switch(keyCode) {
       case RIGHT:
@@ -113,9 +114,22 @@ class ShowManager {
 
     noStroke();
     pushMatrix();
+    
+    if(settings.flip) {
+       translate(width,0);
+       scale(-1,1);
+    }
+    
     translate(cX, cY, 0);
-    rotateY(settings.rotY);
-    rotateX(settings.rotX);
+    
+
+    if(settings.rotX != 0) {
+      rotateX(settings.rotX);
+    }
+    
+    if(settings.rotY != 0) {
+      rotateY(settings.rotY);
+    }
 
     currentShow.draw();
     

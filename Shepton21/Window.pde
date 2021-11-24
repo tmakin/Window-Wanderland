@@ -15,7 +15,6 @@ class Window {
     for (int j = 0; j < settings.nY; j++) {
       for (int i = 0; i <settings.nX; i++) {
 
-
         Rect rect = new Rect(settings.w*i, settings.h*j, settings.w, settings.h);
         ShowBox b = new ShowBox(rect);
 

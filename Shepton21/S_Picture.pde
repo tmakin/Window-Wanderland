@@ -1,4 +1,4 @@
-String[] imageFiles = {"prison.jpg", "babycham.jpg", "apple.png", };
+String[] imageFiles = { "sheep.jpg", "babycham.jpg", "prison.jpg", "anglo.jpg", "snowdrops.jpg"};
 
 class PictureShow extends Show {
 
@@ -12,6 +12,11 @@ class PictureShow extends Show {
   int n = imageFiles.length;
   PImage[] images = new PImage[n];
   int imageIndex = 0;
+  float x = 0;
+  float xMax = 0;
+  int ticksPerImage = 680;
+  float speed = 0;
+  int imageTicks = 0;
 
   boolean hide = true;
   boolean loaded = false;
@@ -28,6 +33,7 @@ class PictureShow extends Show {
       images[i] = processImage(loadImage("images/"+imageFiles[i]));
     }
     loaded = true;
+    updateImageSpeed();
   }
 
   PImage processImage(PImage img) {
@@ -36,32 +42,33 @@ class PictureShow extends Show {
 
     println(windowRatio, imageRatio);
 
-    if (imageRatio > imageRatio) {
-      int newHeight = (int)Math.floor(windowRatio*img.width);
-      int y = (img.height-newHeight)/2;
-      println("Image too tall", img.height);
-      println("newHeight", newHeight);
-      img = img.get(0, y, img.width, newHeight);
-    } else {
-
-      int newWidth = (int)Math.floor(img.height/windowRatio);
-      int x = (img.width-newWidth)/2;
-      println("Image too wide", img.width);
-      println("newWidth", newWidth);
-      img = img.get(x, 0, newWidth, img.height);
-    }
-
-    img.resize(windowRect.Width, windowRect.Height);
+    double scaleY = (double)windowRect.Height/(double)img.height;
+    img.resize((int)(scaleY*img.width), (int)(scaleY*img.height));
 
     return img;
   }
 
+  void updateImageSpeed() {
+    x = 0;
+    
+    PImage img = images[imageIndex];
+    xMax = img.width-windowRect.Width;
+    speed = (float)xMax/(float)ticksPerImage;
+   
+  }
+  
   void nextImage() {
+     // println("imageTicks", imageTicks);
+    imageTicks = 0;
     imageIndex++;
+
+    
     if (imageIndex >= n) {
       imageIndex = 0;
       nextLoop(); 
     }
+    
+        updateImageSpeed();
   }
 
   void hideNextBox() {
@@ -89,19 +96,33 @@ class PictureShow extends Show {
 
   void update() {
     ticks++;
+    imageTicks++;
     if (ticks > 10) {
       ticks = 0;
       hideNextBox();
+    }
+    
+    if(x < xMax) {
+      x+=speed;
+      
+      //println("x", x);
+      //println("speed", speed);
+      //println("xMax", xMax);
     }
   }
 
   void draw() {
     imageMode(CORNER);
-    image(images[imageIndex], 0, 0);
+    
+    PImage img = images[imageIndex];
+    
+    int xInt = (int)x;
+    float xFrac = xInt-x;
+    img = img.get(xInt, 0, windowRect.Width-1, windowRect.Height);
+    image(img, 1+xFrac, 0);
 
     translate(0, 0, 0.01);
     window.draw();
-    window.drawFrame();
   }
 
   void start() {
