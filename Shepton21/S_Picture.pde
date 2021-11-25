@@ -115,14 +115,16 @@ class PictureShow extends Show {
     imageMode(CORNER);
     
     PImage img = images[imageIndex];
-    
-    int xInt = (int)x;
-    float xFrac = xInt-x;
-    img = img.get(xInt, 0, windowRect.Width-1, windowRect.Height);
-    image(img, 1+xFrac, 0);
+    image(img, -x, 0);
 
     translate(0, 0, 0.01);
     window.draw();
+    
+    // draw boxes to mask overlapping images
+    fill(0);
+    int margin = 1+(width-windowRect.Width)/2;
+    rect(-margin, 0, margin, height);
+    rect(windowRect.Width, 0, margin, height);
   }
 
   void start() {

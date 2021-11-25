@@ -32,7 +32,7 @@ class Settings {
 
   Settings() {
 
-    showList.add(new ShowSettings(2, 2)); 
+    //showList.add(new ShowSettings(2, 2)); 
     showList.add(new ShowSettings(3, 1)); 
     showList.add(new ShowSettings(1, 2)); 
     showList.add(new ShowSettings(0, 2)); 
