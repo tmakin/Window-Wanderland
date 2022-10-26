@@ -32,11 +32,11 @@ class Settings {
 
   Settings() {
 
-    showList.add(new ShowSettings(0, 1));  // tile
     showList.add(new ShowSettings(1, 1));  // checker
+    showList.add(new ShowSettings(0, 1));  // tile
     showList.add(new ShowSettings(2, 2));  // apple
     
-    showList.add(new ShowSettings(1, 2));  // checker
+    showList.add(new ShowSettings(1, 1));  // checker
     showList.add(new ShowSettings(0, 1));  // tile
     showList.add(new ShowSettings(3, 2));  // murmaration
 

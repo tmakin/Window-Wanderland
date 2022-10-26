@@ -11,8 +11,8 @@ ShowManager showManager;
 void setup() {
 
   noCursor();
-  //fullScreen(P3D, 1);
-  size(1024, 768, P3D);
+  fullScreen(P3D, 1);
+  //size(1024, 768, P3D);
 
   frameRate(40);
 
