@@ -16,9 +16,10 @@ class Settings {
   int nY = 4;
 
   int margin=0;
-  float aspectRatio = 1.89;
+  float aspectRatio = 1.85;
 
   float rotX=0;
+  float scaleX=1;
   float rotY=0;
 
   int n;
@@ -32,13 +33,8 @@ class Settings {
 
   Settings() {
 
-    showList.add(new ShowSettings(1, 1));  // checker
-    showList.add(new ShowSettings(0, 1));  // tile
-    showList.add(new ShowSettings(2, 2));  // apple
-    
-    showList.add(new ShowSettings(1, 1));  // checker
-    showList.add(new ShowSettings(0, 1));  // tile
-    showList.add(new ShowSettings(3, 2));  // murmaration
+    showList.add(new ShowSettings(0, 1));  // snow
+    showList.add(new ShowSettings(1, 1));  // tile
 
     tryLoad();
     postProcess();
