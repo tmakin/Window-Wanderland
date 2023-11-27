@@ -7,15 +7,15 @@ class Snowflake {
   int maxPoints;
   int ticks=0;
   int meltTicks = 0;
-  int maxTicks;
   float rotationSpeed;
   PVector origin;
   int initialTicks;
   float alpha;
   float scaleFactor;
-  float drawCount =0;
+  float activeParticleCount =0;
   int finishedTicks = 0;
   boolean finished = false;
+  float meltSpeed =1;
 
 
   Snowflake(PVector origin_, float boxWidth) {
@@ -38,7 +38,7 @@ class Snowflake {
 
     initialTicks = (int)random(0, 100);
     meltTicks = (int)random(200, 400);
-    maxTicks = (int)random(300, 1500);
+    meltSpeed = random(0.3, 1);
     rotationSpeed = random(-1.0/300, 1.0/300);
     seed = random(1);
     seed2 = random(1);
@@ -46,40 +46,45 @@ class Snowflake {
     current = createParticle();
     snowflake = new ArrayList<Particle>();
     ticks = 0;
-    drawCount = 0;
+    activeParticleCount = 0;
     finished = false;
     finishedTicks = 0;
   }
 
   void update() {
+    // initial pause
     if (initialTicks > 0) {
       initialTicks--;
       return;
     }
+    
     ticks++;
-    
-    if (ticks > maxTicks || drawCount < 0) {
-      regen();
-      return;
-    }
-    
-    // update alpha
-    var f = ((float)ticks)/maxTicks;
-    alpha = (100*(1.0-f));
     
     // rotation
     rot += rotationSpeed;
 
     if(finished) {
-        finishedTicks++;
-        if(finishedTicks > meltTicks) {
-            drawCount-=0.5;
-        }
+      // regen when no more particles left
+      if (activeParticleCount <= 0) {
+        regen();
         return;
+      }
+      
+      // keep track of number of ticks since finished flag was set
+      finishedTicks++;
+      
+      // start melting
+      if(finishedTicks > meltTicks) {
+          activeParticleCount-=meltSpeed;
+      }
+      
+      // opactiy based on number of active particles
+      alpha = 100.0*((float)activeParticleCount)/snowflake.size();
+      return;
     }
     
+    // generate next particle
     int solverIterations = 0;
-
     while (!current.finished() && !current.intersects(snowflake)) {
       current.update();
       solverIterations++;
@@ -91,17 +96,16 @@ class Snowflake {
     }
 
     snowflake.add(current);
-    drawCount++;
+    activeParticleCount++;
     current = createParticle();
   }
 
   void draw() {
-    if(drawCount <= 0) {
+    if(activeParticleCount <= 0) {
       return;      
     }
     
     pushMatrix();
-
     translate(origin.x, origin.y);
     scale(scaleFactor);
     rotate(rot);
@@ -112,13 +116,13 @@ class Snowflake {
     for (int i = 0; i < 6; i++) {
       rotate(PI/3);
 
-      for (int j = 0; j < drawCount; j++) {
+      for (int j = 0; j < activeParticleCount; j++) {
         snowflake.get(j).show();
       }
 
       pushMatrix();
       scale(1, -1);
-      for (int j = 0; j < drawCount; j++) {
+      for (int j = 0; j < activeParticleCount; j++) {
         snowflake.get(j).show();
       }
       popMatrix();
