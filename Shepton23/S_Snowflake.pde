@@ -35,7 +35,7 @@ class SnowflakeShow extends Show  {
   }
 
   void update() {
-    hue+=0.05;
+    hue+=0.1;
     if(hue > 355) {
       hue =0;
     }

@@ -39,7 +39,7 @@ class Snowflake {
     initialTicks = (int)random(0, 100);
     meltTicks = (int)random(200, 400);
     meltSpeed = random(0.3, 1);
-    rotationSpeed = random(-1.0/300, 1.0/300);
+    rotationSpeed = random(-1.0/500, 1.0/500);
     seed = random(1);
     seed2 = random(1);
     maxPoints = floor(random(100, 300));
